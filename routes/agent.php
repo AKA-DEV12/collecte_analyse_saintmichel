@@ -8,10 +8,17 @@ use Illuminate\Support\Facades\Auth;
 Route::middleware(['auth', 'verified'])->prefix('agents')->group(function () {
 
 
-  
+  Route::get('/', function (Request $request) {
+        // Vérifie le rôle de l'utilisateur
+        if (!Auth::check() || Auth::user()->role != 1) {
+            abort(403, 'Accès interdit.');
+        }
+
+        // Crée une instance du contrôleur et appelle la méthode
+        return app(AgentController::class)->index($request);
+    })->name('agent.index');
 
 
-    Route::post('/', [AgentController::class, 'index'])->name('agent.index');
 
 
     Route::post('/store', [AgentController::class, 'store'])->name('agent.store');

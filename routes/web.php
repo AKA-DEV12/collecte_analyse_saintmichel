@@ -22,9 +22,17 @@ Route::options('/{any}', function () {
 })->where('any', '.*');
 
 
-Route::get('/dashboard', [DashboardController::class, 'index'])
-    ->middleware(['auth', 'verified'])
-    ->name('dashboard');
+Route::get('/', function (Request $request) {
+        // Vérifie le rôle de l'utilisateur
+        if (!Auth::check() || Auth::user()->role != 1) {
+            abort(403, 'Accès interdit.');
+        }
+
+        // Crée une instance du contrôleur et appelle la méthode
+        return app(DashboardController::class)->index($request);
+    })->middleware(['auth', 'verified'])->name('dashboard');
+
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
