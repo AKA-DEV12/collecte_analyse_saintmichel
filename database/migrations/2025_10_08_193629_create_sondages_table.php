@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('sondages', function (Blueprint $table) {
             $table->id();
             $table->string('titre');
+            $table->integer('agent');
             $table->text('description')->nullable();
             $table->timestamps();
         });
