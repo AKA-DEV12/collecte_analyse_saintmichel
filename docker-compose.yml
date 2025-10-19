@@ -1,0 +1,46 @@
+version: "3.9"
+services:
+  app:
+    build: .
+    container_name: laravel_app
+    ports:
+      - "10000:10000"
+    environment:
+      APP_ENV: production
+      APP_DEBUG: "false"
+      APP_URL: http://localhost:10000
+      # Généré automatiquement si manquant, mais mettez votre clé en prod
+      # APP_KEY: base64:xxxxxxxxxxxxxxxxxxxxxxxx
+      LOG_CHANNEL: stderr
+      DB_CONNECTION: pgsql
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_DATABASE: laravel
+      DB_USERNAME: laravel
+      DB_PASSWORD: secret
+      RUN_MIGRATIONS: "true"
+      PORT: 10000
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./:/var/www/html
+  db:
+    image: postgres:15
+    container_name: laravel_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: laravel
+      POSTGRES_USER: laravel
+      POSTGRES_PASSWORD: secret
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+volumes:
+  pgdata:
