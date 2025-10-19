@@ -1,31 +1,38 @@
-# Étape 1 : image PHP avec extensions nécessaires
 FROM php:8.2-fpm
 
-# Installer les dépendances système et PHP
+# Install system dependencies and PHP extensions
 RUN apt-get update && apt-get install -y \
     git unzip libpng-dev libonig-dev libxml2-dev zip curl \
     libpq-dev \
-    && docker-php-ext-install pdo_pgsql mbstring exif pcntl bcmath gd
+  && docker-php-ext-install pdo_pgsql mbstring exif pcntl bcmath gd \
+  && rm -rf /var/lib/apt/lists/*
 
-# Installer Composer
+# Opcache for performance
+RUN docker-php-ext-install opcache
+COPY docker/opcache.ini /usr/local/etc/php/conf.d/opcache.ini
+
+# Install Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# Définir le répertoire de travail
 WORKDIR /var/www/html
 
-# Copier le code source
+# Copy application
 COPY . .
 
-# Installer les dépendances PHP via Composer
-RUN composer install --optimize-autoloader --no-dev
+# Ensure storage is writable
+RUN mkdir -p storage bootstrap/cache \
+  && chown -R www-data:www-data storage bootstrap/cache \
+  && chmod -R 775 storage bootstrap/cache
 
-# Optimiser les caches Laravel
-RUN php artisan config:cache
-RUN php artisan route:cache
-RUN php artisan view:cache
+# Install PHP dependencies (no-dev in production)
+RUN composer install --no-dev --prefer-dist --optimize-autoloader --no-interaction \
+  && composer dump-autoload -o
 
-# Exposer le port
+# Environment
+ENV PORT=10000
 EXPOSE 10000
 
-# Commande de démarrage (Render utilise $PORT)
-CMD php artisan serve --host=0.0.0.0 --port=10000
+# Entrypoint
+COPY docker/entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+ENTRYPOINT ["/entrypoint.sh"]
