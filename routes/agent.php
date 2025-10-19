@@ -10,7 +10,7 @@ Route::middleware(['auth', 'verified'])->prefix('agents')->group(function () {
 
      Route::get('/', function () {
         // Vérifie le rôle de l'utilisateur
-        if (!Auth::check() || Auth::user()->role != 0) {
+        if (!Auth::check() || Auth::user()->role === 0) {
             abort(403, 'Accès interdit.');
         }
 
