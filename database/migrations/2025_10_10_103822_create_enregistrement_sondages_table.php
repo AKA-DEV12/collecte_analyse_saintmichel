@@ -12,12 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('enregistrement_sondages', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('sondage_id')->constrained()->onDelete('cascade');
-            $table->string('label');
-            $table->string('value')->nullable();
-            $table->uuid('groupe_id')->nullable()->after('sondage_id');
-            $table->timestamps();
+             $table->id();
+    $table->foreignId('sondage_id')->constrained()->onDelete('cascade');
+    $table->string('label');
+    $table->string('value')->nullable();
+    $table->uuid('groupe_id')->nullable(); // <-- correction ici
+    $table->timestamps();
         });
     }
 
