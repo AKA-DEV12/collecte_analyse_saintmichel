@@ -11,6 +11,16 @@ Route::get('/', function () {
     return view('auth.login');
 });
 
+// Health endpoint for platform checks
+Route::get('/health', function () {
+    return response()->json(['status' => 'ok']);
+});
+
+// Handle CORS preflight (avoid 405 for OPTIONS behind proxy)
+Route::options('/{any}', function () {
+    return response('', 204);
+})->where('any', '.*');
+
 
 Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth', 'verified'])
