@@ -3,7 +3,7 @@
     "outputDirectory" : "public",
     "functions" : 
         {
-            "aoi/lambda.php" :{
+            "api/lambda.php" :{
                 "runtime" : "vercel-php@0.7.4"
             }
             
