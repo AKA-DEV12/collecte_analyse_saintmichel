@@ -9,10 +9,29 @@ if [ -z "${APP_KEY}" ]; then
   php artisan key:generate --force || true
 fi
 
-# Run migrations in production if requested
+# Clear config first to ensure fresh env is read
+php artisan config:clear || true
+
+# Run migrations in production if requested (with retry)
 if [ "${RUN_MIGRATIONS}" = "true" ]; then
-  php artisan migrate --force || true
+  echo "[entrypoint] Running migrations with retry..."
+  set +e
+  ATTEMPTS=0
+  MAX_ATTEMPTS=20
+  until php artisan migrate --force; do
+    ATTEMPTS=$((ATTEMPTS+1))
+    if [ $ATTEMPTS -ge $MAX_ATTEMPTS ]; then
+      echo "[entrypoint] Migrations failed after ${ATTEMPTS} attempts. Continuing startup."
+      break
+    fi
+    echo "[entrypoint] Migration failed. Retrying in 5s... (${ATTEMPTS}/${MAX_ATTEMPTS})"
+    sleep 5
+  done
+  set -e
 fi
+
+# Ensure storage symlink exists (prevents 500 on assets)
+php artisan storage:link || true
 
 # Optimize caches
 php artisan config:cache || true
