@@ -1,28 +1,31 @@
-# Étape 1 : image de base avec PHP, Composer et extensions nécessaires
+# Étape 1 : image PHP avec extensions nécessaires
 FROM php:8.2-fpm
 
-# Installer les dépendances système
+# Installer les dépendances système et PHP
 RUN apt-get update && apt-get install -y \
     git unzip libpng-dev libonig-dev libxml2-dev zip curl \
-    && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
+    libpq-dev \
+    && docker-php-ext-install pdo_pgsql mbstring exif pcntl bcmath gd
 
 # Installer Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+
+# Définir le répertoire de travail
+WORKDIR /var/www/html
 
 # Copier le code source
-WORKDIR /var/www/html
 COPY . .
 
-# Installer les dépendances Laravel
-RUN composer install --no-dev --optimize-autoloader
+# Installer les dépendances PHP via Composer
+RUN composer install --optimize-autoloader --no-dev
 
-# Donner les permissions à Laravel
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+# Optimiser les caches Laravel
+RUN php artisan config:cache
+RUN php artisan route:cache
+RUN php artisan view:cache
 
-# Générer le cache Laravel
-RUN php artisan config:cache && php artisan route:cache && php artisan view:cache
-
-# Lancer le serveur PHP intégré
-CMD php artisan serve --host=0.0.0.0 --port=10000
-
+# Exposer le port
 EXPOSE 10000
+
+# Commande de démarrage (Render utilise $PORT)
+CMD php artisan serve --host=0.0.0.0 --port=10000
