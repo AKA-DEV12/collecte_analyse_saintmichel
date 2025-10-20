@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('titre');
             $table->integer('agent');
             $table->text('description')->nullable();
+            $table->foreignId('created_by')->constrained('users')->onDelete('cascade');
             $table->timestamps();
         });
     }

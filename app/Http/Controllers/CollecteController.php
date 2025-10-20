@@ -63,6 +63,7 @@ class CollecteController extends Controller
         $sondage = Sondage::create([
             'titre' => $validated['titre'],
             'agent' => $validated['agent'] ?? null,
+            'created_by' => auth()->id(),
             'description' => $validated['description'] ?? null,
         ]);
 
@@ -85,62 +86,6 @@ class CollecteController extends Controller
         return redirect()->back()->with('success', 'Formulaire créé avec succès 🎉');
     }
 
-    // public function update(Request $request, $id)
-    // {
-    //     // dd('Merci de patienter..., En travaux');
-    //     $validated = $request->validate([
-    //         'titre' => 'required|string|max:255',
-    //         'description' => 'nullable|string',
-    //         'champs' => 'required|string', // JSON des champs
-    //     ]);
-
-    //     $sondage = Sondage::findOrFail($id);
-
-    //     $sondage->update([
-    //         'titre' => $validated['titre'],
-    //         'description' => $validated['description'] ?? null,
-    //     ]);
-
-    //     $champs = json_decode($validated['champs'], true);
-
-    //     // Tableau des IDs existants mis à jour (pour nettoyage ensuite)
-    //     $updatedIds = [];
-
-    //     foreach ($champs as $champ) {
-    //         // Si un ID est présent dans les données du champ, on l'utilise
-    //         $champModel = Champ::updateOrCreate(
-    //             [
-    //                 'id' => $champ['id'] ?? null,
-    //                 'sondage_id' => $sondage->id,
-    //             ],
-    //             [
-    //                 'label' => $champ['label'],
-    //                 'value' => $champ['label'],
-    //                 'type' => $champ['type'],
-    //                 'obligatoire' => $champ['required'] ?? false,
-    //                 'options' => $champ['options'] ?? null, // Pas besoin de json_encode si colonne JSON
-    //             ]
-    //         );
-
-    //         EnregistrementSondage::updateOrCreate(
-    //             [
-    //                 'sondage_id' => $sondage->id,
-    //             ],
-    //             [
-    //                 'label' => $champ['label'],
-    //             ]
-    //         );
-
-    //         $updatedIds[] = $champModel->id;
-    //     }
-
-    //     // Supprimer les anciens champs qui ne sont plus dans la requête
-    //     Champ::where('sondage_id', $sondage->id)
-    //         ->whereNotIn('id', $updatedIds)
-    //         ->delete();
-
-    //     return redirect()->back()->with('success', 'Mis à jour avec succès ');
-    // }
 
     public function update(Request $request, $id)
     {

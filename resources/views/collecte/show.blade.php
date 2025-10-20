@@ -213,9 +213,10 @@
                         $champ = $champsDuGroupe->firstWhere('label', $collection->label);
                     @endphp
                     <td>{{ $champ->value ?? '-' }}</td>
+                     
                 @endforeach
                 
-                <td>Inconnu</td>
+               <td>{{$champ->creator->name ?? 'Inconnu'}}</td>
             </tr>
             @php $counter++; @endphp
         @endforeach

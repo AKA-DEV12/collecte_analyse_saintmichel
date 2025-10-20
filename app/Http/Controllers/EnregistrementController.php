@@ -76,6 +76,7 @@ class EnregistrementController extends Controller
                     'value' => $value,
                     'sondage_id' => $request->enregistrement_id,
                     'groupe_id' => $groupeId, // <- regroupement ici
+                    'created_by' => auth()->id(),
                 ]);
             }
 

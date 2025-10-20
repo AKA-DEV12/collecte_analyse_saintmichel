@@ -191,7 +191,10 @@
   
             
                     
+                      <div  style="color: #000; padding: 12px">
+    
                     @include('flashmessage')
+            </div>
 
             <div class="form-section" >
               <form id="parishForm" method="POST" action="{{ route('recensement.store') }}" enctype="multipart/form-data">

@@ -9,7 +9,13 @@ class Sondage extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['id', 'titre', 'description', 'agent'];
+    protected $fillable = [
+        'id',
+        'titre',
+        'description',
+        'agent',
+        'created_by',
+    ];
 
     public function champs()
     {
@@ -18,5 +24,10 @@ class Sondage extends Model
     public function enregistrements()
     {
         return $this->hasMany(EnregistrementSondage::class);
+    }
+
+    public function creator()
+    {
+        return $this->belongsTo(User::class, 'created_by');
     }
 }

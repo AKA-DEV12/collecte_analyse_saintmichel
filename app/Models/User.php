@@ -28,6 +28,16 @@ class User extends Authenticatable
         'password',
     ];
 
+    public function enregistrementSondages()
+    {
+        return $this->hasMany(EnregistrementSondage::class, 'created_by');
+    }
+
+    public function sondages()
+    {
+        return $this->hasMany(EnregistrementSondage::class, 'created_by');
+    }
+
     /**
      * The attributes that should be hidden for serialization.
      *

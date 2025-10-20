@@ -161,9 +161,11 @@
 @section('content')
 <div class="row" style="padding: 40px 10px 10px 10px;">
   <div class="col-md-2">
-    <button class="btn btn-outline-primary btn-sm fw-bold" onclick="window.history.back();">
+   <a href="{{route('collecte.show', $donnee->id)}}">
+     <button class="btn btn-outline-primary btn-sm fw-bold">
       Retour
     </button>
+   </a>
   </div>
 </div>
  <div class="container">
@@ -184,7 +186,7 @@
 
             
             <div class="text-center">
-                <div class="info-badge" style="color: #000;">
+                <div  style="color: #000; padding: 12px">
                     
                     {{-- <span>Nous avons <strong>17 Paroissiens enregistrés</strong></span> --}}
                     @include('flashmessage')

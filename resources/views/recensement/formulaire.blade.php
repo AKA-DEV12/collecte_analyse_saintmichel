@@ -161,9 +161,11 @@
 @section('content')
 <div class="row" style="padding: 40px 10px 10px 10px;">
   <div class="col-md-2">
-    <button class="btn btn-outline-primary btn-sm fw-bold" onclick="window.history.back();">
+    <a href="{{route('recensement.index')}}">
+    <button class="btn btn-outline-primary btn-sm fw-bold">
       Retour
     </button>
+    </a>
   </div>
 </div>
  <div class="container">
@@ -186,9 +188,11 @@
             <div style="background: rgb(56, 56, 90);">
 
   
-            
-                    
+            <div  style="color: #000; padding: 12px">
+    
                     @include('flashmessage')
+            </div>
+                
 
             <div class="form-section" >
               <form id="parishForm" method="POST" action="{{ route('recensement.store') }}" enctype="multipart/form-data">
