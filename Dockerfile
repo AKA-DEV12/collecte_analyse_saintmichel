@@ -2,9 +2,9 @@ FROM php:8.2-fpm
 
 # Install system dependencies and PHP extensions
 RUN apt-get update && apt-get install -y \
-    git unzip libpng-dev libonig-dev libxml2-dev zip curl \
+    git unzip libpng-dev libonig-dev libxml2-dev libzip-dev zip curl \
     libpq-dev \
-  && docker-php-ext-install pdo_pgsql mbstring exif pcntl bcmath gd \
+  && docker-php-ext-install pdo_pgsql mbstring exif pcntl bcmath gd zip dom \
   && rm -rf /var/lib/apt/lists/*
 
 # Opcache for performance
@@ -13,6 +13,7 @@ COPY docker/opcache.ini /usr/local/etc/php/conf.d/opcache.ini
 
 # Install Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+ENV COMPOSER_ALLOW_SUPERUSER=1
 
 WORKDIR /var/www/html
 
@@ -25,8 +26,8 @@ RUN mkdir -p storage bootstrap/cache \
   && chmod -R 775 storage bootstrap/cache
 
 # Install PHP dependencies (no-dev in production)
-RUN composer install --no-dev --prefer-dist --optimize-autoloader --no-interaction \
-  && composer dump-autoload -o
+RUN composer install --no-dev --prefer-dist --no-interaction --no-scripts \
+  && composer dump-autoload -o --no-scripts
 
 # Environment
 ENV PORT=10000
