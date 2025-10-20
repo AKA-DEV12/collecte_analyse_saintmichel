@@ -40,24 +40,33 @@ class AgentController extends Controller
     public function recensement(Request $request)
     {
         $query = Recensement::query();
-          // Tri
-    $sortBy = in_array($request->get('sort_by'), [
-        'nom','date_naissance','quartier','baptise','confirme','profession_de_foi',
-        'telephone','numero_whatsapp','situation_professionnelle','situation_matrimoniale',
-        'ceb','created_at'
-    ]) ? $request->get('sort_by') : 'created_at';
+        // Tri
+        $sortBy = in_array($request->get('sort_by'), [
+            'nom',
+            'date_naissance',
+            'quartier',
+            'baptise',
+            'confirme',
+            'profession_de_foi',
+            'telephone',
+            'numero_whatsapp',
+            'situation_professionnelle',
+            'situation_matrimoniale',
+            'ceb',
+            'created_at'
+        ]) ? $request->get('sort_by') : 'created_at';
 
-    $sortDir = $request->get('sort_dir') === 'asc' ? 'asc' : 'desc';
-    $query->orderBy($sortBy, $sortDir);
+        $sortDir = $request->get('sort_dir') === 'asc' ? 'asc' : 'desc';
+        $query->orderBy($sortBy, $sortDir);
 
-    // Pagination
-    $perPage = (int) ($request->get('per_page', 10));
-    if ($perPage <= 0 || $perPage > 100) {
-        $perPage = 10;
-    }
-          $recensements = $query->with('createur')->where('created_by', auth()->id())->paginate($perPage)->withQueryString();
+        // Pagination
+        $perPage = (int) ($request->get('per_page', 10));
+        if ($perPage <= 0 || $perPage > 100) {
+            $perPage = 10;
+        }
+        $recensements = $query->with('createur')->where('created_by', auth()->id())->paginate($perPage)->withQueryString();
 
-    return view('recensement.index', compact('recensements', 'sortBy', 'sortDir'));
+        return view('recensement.index', compact('recensements', 'sortBy', 'sortDir'));
     }
 
     public function formulaire()
@@ -125,6 +134,7 @@ class AgentController extends Controller
             'tel' => 'required|string|max:20|unique:users,tel,' . $id,
             'fonction' => 'required|string|max:255',
             'ceb' => 'required|string|max:255',
+            'type_agent' => 'required|in:0,1',
         ]);
 
         try {
@@ -132,6 +142,8 @@ class AgentController extends Controller
             $agent->update([
                 'name' => $request->name,
                 'tel' => $request->tel,
+                'type_agent' => $request->type_agent,
+
             ]);
 
             return redirect()->route('agent.index')->with('success', 'Agent mis à jour avec succès.');
