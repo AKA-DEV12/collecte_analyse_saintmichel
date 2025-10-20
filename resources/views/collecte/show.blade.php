@@ -88,7 +88,7 @@
           
         </div>
         <div class="d-flex justify-content-center">
-            <button class="btn btn-outline-success btn-sm fw-bold">Exporter</button>
+            <a href="{{ route('collecte.export.excel', ['sondage_id' => $donnees->id]) }}" class="btn btn-outline-success btn-sm fw-bold">Exporter</a>
         </div>
         </div>
 
@@ -104,7 +104,7 @@
           
         </div>
         <div class="d-flex justify-content-center">
-            <button class="btn btn-outline-danger btn-sm fw-bold">Exporter</button>
+            <a href="{{ route('collecte.export.pdf', ['sondage_id' => $donnees->id]) }}" class="btn btn-outline-danger btn-sm fw-bold">Exporter</a>
           </div>
             </div>
         </div>
@@ -140,55 +140,7 @@
                    
                   </div>
                   <div class="table-responsive mt-4">
-                    {{-- <table class="table mb-0 text-nowrap varient-table align-middle fs-3">
-                      <thead>
-                        <tr>
-                          @php
-                              $longueur = count($collections); // Le nombre de champs
-                          @endphp
-                          <th>#</th>
-                          @foreach ($collections as $collection)
-                            <th>{{ $collection->label }}</th>
-                          @endforeach
-                          <th>Enregistré par</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        @php
-                            $total = count($donnees->enregistrements);
-                            $index = 0;
-                        @endphp
-
-                        @foreach ($donnees->enregistrements as $i => $champ)
-                            @if ($index % $longueur == 0)
-                                <tr>
-                                    <td>{{ floor($index / $longueur) + 1 }}</td>
-                            @endif
-
-                            <td>{{ $champ->value ?? '-' }}</td>
-
-                            @php $index++; @endphp
-
-                            @if ($index % $longueur == 0)
-                                    <td>Inconnu</td>
-                                </tr>
-                            @endif
-                        @endforeach
-
-                        <!-- Si le nombre de champs n'est pas un multiple exact, on complète la ligne -->
-                        @if ($index % $longueur != 0)
-                            @for ($i = 0; $i < ($longueur - ($index % $longueur)); $i++)
-                                <td>-</td>
-                            @endfor
-                            <td>Inconnu</td>
-                            </tr>
-                        @endif
-                      </tbody>
-                    </table> --}}
-
-
-
-                   <table class="table mb-0 text-nowrap varient-table align-middle fs-3">
+           <table class="table mb-0 text-nowrap varient-table align-middle fs-3">
     <thead>
         <tr>
             <th>#</th>

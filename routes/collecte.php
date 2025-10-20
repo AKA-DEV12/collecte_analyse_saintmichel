@@ -18,4 +18,7 @@ Route::middleware(['auth', 'verified'])->prefix('collecte')->group(function () {
     Route::get('/enregistrement/{id}', [CollecteController::class, 'formulaire'])->name('collecte.formulaire');
 
     Route::post('/enregistremen/store', [EnregistrementController::class, 'store'])->name('collecte.enregistrement.store');
+
+    Route::get('/export/pdf', [EnregistrementController::class, 'exportPdf'])->name('collecte.export.pdf');
+Route::get('/export/excel', [EnregistrementController::class, 'exportExcel'])->name('collecte.export.excel');
 });

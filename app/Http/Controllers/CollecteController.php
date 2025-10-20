@@ -205,4 +205,5 @@ class CollecteController extends Controller
             return back()->with('error', 'Erreur lors de la suppression : ' . $th->getMessage());
         }
     }
+    
 }

@@ -12,6 +12,16 @@ fi
 # Clear config first to ensure fresh env is read
 php artisan config:clear || true
 
+# Ensure required export packages are installed in runtime (as a fallback)
+if [ ! -d "vendor/maatwebsite/excel" ] || [ ! -d "vendor/barryvdh/laravel-dompdf" ]; then
+  echo "[entrypoint] Installing export packages..."
+  composer require maatwebsite/excel barryvdh/laravel-dompdf --no-interaction || true
+fi
+
+# Publish vendor assets/config for Excel and DomPDF
+php artisan vendor:publish --provider="Maatwebsite\\Excel\\ExcelServiceProvider" --force || true
+php artisan vendor:publish --provider="Barryvdh\\DomPDF\\ServiceProvider" --force || true
+
 # Run migrations in production if requested (with retry)
 if [ "${RUN_MIGRATIONS}" = "true" ]; then
   echo "[entrypoint] Running migrations with retry..."
