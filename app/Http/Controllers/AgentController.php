@@ -69,6 +69,7 @@ class AgentController extends Controller
         return view('recensement.index', compact('recensements', 'sortBy', 'sortDir'));
     }
 
+
     public function formulaire()
     {
         return view('agent.recensement_formulaire');
@@ -143,6 +144,8 @@ class AgentController extends Controller
                 'name' => $request->name,
                 'tel' => $request->tel,
                 'type_agent' => $request->type_agent,
+                'fonction' => $request->fonction,
+                'ceb' => $request->ceb,
 
             ]);
 
