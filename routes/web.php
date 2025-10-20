@@ -22,7 +22,7 @@ Route::options('/{any}', function () {
 })->where('any', '.*');
 
 
-Route::get('/', function (Request $request) {
+Route::get('/dashboard', function (Request $request) {
         // Vérifie le rôle de l'utilisateur
         if (!Auth::check() || Auth::user()->role != 1) {
             abort(403, 'Accès interdit.');
