@@ -101,6 +101,12 @@ class AgentController extends Controller
 
         DB::beginTransaction();
 
+        // Extraire les deux premières lettres du nom
+        $namePart = substr($request->name, 0, 2);
+
+        // Extraire les 3e à 5e chiffres du téléphone
+        $telPart = substr($request->tel, 2, 3);
+
         try {
             User::create([
                 'name' => $request->name,
@@ -108,6 +114,7 @@ class AgentController extends Controller
                 'fonction' => $request->fonction,
                 'ceb' => $request->ceb,
                 'role' => 0,
+                'email' => strtolower($namePart . $telPart . '@gmail.com'),
                 'type_agent' => $request->type_agent,
                 'password' => bcrypt($request->password),
             ]);
