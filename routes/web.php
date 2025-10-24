@@ -43,3 +43,4 @@ require __DIR__ . '/auth.php';
 require __DIR__ . '/collecte.php';
 require __DIR__ . '/recensement.php';
 require __DIR__ . '/agent.php';
+require __DIR__ . '/rendezvous.php';
